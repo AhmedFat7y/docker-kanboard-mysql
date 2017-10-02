@@ -3,23 +3,26 @@ services:
   kanboard:
     image: kanboard/kanboard:stable
     ports:
-     - "80:80"
+      - "80:80"
     volumes:
-     - kanboard_data:/var/www/app/data
-     - kanboard_plugins:/var/www/app/plugins
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins
+    networks: 
+      - kanboard_netowrk
   kanboard_db:
     image: mysql:5.7
-    ports:
-      - "3306:3306"
+    expose:
+      - 3306
     volumes:
       - kanboard_db_data:/var/lib/mysql
-    env_file:
-      - ".kanboard.env"
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - kanboard_netowrk
+
 volumes:
   kanboard_data:
     driver: local
@@ -27,5 +30,6 @@ volumes:
     driver: local
   kanboard_db_data:
     driver: local
+
 networks:
   kanboard_netowrk:
